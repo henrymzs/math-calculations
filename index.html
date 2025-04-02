@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/digital-7-mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixellify+Sans&display=swap" rel="stylesheet">
+    <title>Desafie-se</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #cccccc;
+            line-height: 1.5;
+            background-color: #0D1117;
+            padding: 30px;
+            width: 100%;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #header {
+            text-align: center;
+        }
+
+        #header p{
+            color: #ff0303;
+            font-weight: bold;
+            margin: 4px;
+
+        }
+
+        #main {
+            margin: 50px;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dividing-line {
+            border: 1px solid #ccc;
+            width: 200px;
+        }
+
+        #main input {
+            background-color: #ccc;
+            width: 110px;
+            font-weight: bold;
+        }
+
+        .btn {
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            background-color: #08ff3e;
+            color: #0D1117;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #006e18;
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: space-evenly;
+            margin: 10px;
+        }
+
+        .value-calc {
+            font-size: 22px;
+        }
+
+        .operation {
+            color: #d10202;
+            font-size: 32px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <header id="header">
+            <h1>Realize Contas de Matemática básica:</h1>
+            <p>Soma, Subtração, Divisão, Multiplicação</p>
+        </header>
+
+        <main id="main">
+            <span class="value-calc"></span>
+            <span class="operation"></span>
+            <span class="value-calc"></span>
+            
+            <span class="dividing-line"></span>
+            <input type="number" id="user-input" required placeholder="Digite a solução">
+            <button id="check-answer" class="btn">Verificar</button>
+            <p id="result-message"></p>
+        </main>
+
+        <footer id="footer">
+            <h1 class="footer-title">Quanto tempo demorou para realizar o cálculo?</h1>
+            <div class="footer-buttons">
+                <button class="btn" data-time="2">2Min</button>
+                <button class="btn" data-time="5">5Min</button>
+                <button class="btn" data-time="8">8Min</button>
+            </div>
+            <p id="time-message"></p>
+            
+        </footer>
+
+    </div>
+    <script>
+        const values = document.querySelectorAll('.value-calc');
+        const operationSpan = document.querySelector('.operation');
+        const userInput = document.getElementById('user-input');
+        const checkButton = document.getElementById('check-answer');
+        const resultMessage = document.getElementById('result-message');
+        const timeMessage = document.getElementById('time-message');
+        const timeButtons = document.querySelectorAll(".footer-buttons .btn");
+    
+        let startTime = Date.now(); // deve iniciar o cronometro
+    
+        let number1 = Math.floor(Math.random() * 100) + 1;
+        let number2 = Math.floor(Math.random() * 100) + 1;
+        const operations = ["+", "-", "*", "/"];
+        const operation = operations[Math.floor(Math.random() * operations.length)];
+        
+        // deve garantir que os dois números serão diviseis um pelo outro
+        if (operation === "/") {
+            number1 = number1 * number2; 
+        }
+    
+        values[0].textContent = number1;
+        operationSpan.textContent = operation;
+        values[1].textContent = number2;
+    
+        function calculateResults(n1, n2, op) {
+            switch (op) {
+                case "+": return n1 + n2;
+                case "-": return n1 - n2;
+                case "*": return n1 * n2;
+                case "/": return n1 / n2;
+            }
+        }
+    
+        let elapsedTime = 0;
+    
+        checkButton.addEventListener("click", () => {
+            const correctAnswer = calculateResults(number1, number2, operation);
+            const userResponse = parseFloat(userInput.value);
+            
+            elapsedTime = Math.floor((Date.now() - startTime) / 1000); // Tempo em segundos
+    
+            if (userResponse === correctAnswer) {
+                resultMessage.textContent = "✅ Resposta correta!";
+                resultMessage.style.color = "green";
+            } else {
+                resultMessage.textContent = `❌ Resposta incorreta! O correto é ${correctAnswer}`;
+                resultMessage.style.color = "red";
+            }
+        });
+    
+        timeButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const chosenTime = button.getAttribute("data-time");
+                timeMessage.textContent = `Você escolheu: mais de ${chosenTime} minutos. Seu tempo real foi ${elapsedTime} segundos.`;
+            });
+        });
+    
+    </script>
+    
+</body>
+</html>
